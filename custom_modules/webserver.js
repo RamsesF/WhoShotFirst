@@ -1,6 +1,8 @@
 let express = require('express');
 let app = express();
 let path = require('path');
+app.use (express.static(__dirname + '/../web_pages'));
+
 
 // viewed at http://localhost:8080
 const startWebServer = () => {
