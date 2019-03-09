@@ -1,0 +1,12 @@
+<script src="/socket.io/socket.io.js"></script>
+</script>
+<script>
+    let socket = io();
+    const startHandlingClientSocketEvents = (io) => {
+        socket.on('clt-user_connected', function(socket){
+            console.log('A user connected somewhere!');
+            });
+    }
+
+    startHandlingClientSocketEvents();
+</script>
