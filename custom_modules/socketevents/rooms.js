@@ -9,13 +9,14 @@ const createRoom = (socket) => {
 
     const room = {};
     room.id = roomId;
-    room.player1 = "";
-    room.player2 = "";
-    room.amountOfSpectators = "";
-    room.joinUrl = "localhost:8080/duel.html" + "?roomId="+roomId;
+    room.player1 = null;
+    room.player2 = null;
+    room.amountOfSpectators = 0;
+    room.joinUrl = "localhost:8080/duel.html" + "?roomId=" + roomId;
 
     gameRooms.push(room);
-    socket.emit('srv-user_join_room', roomId);
+    socket.emit('srv-srv_crt_room');
+    socket.broadcast.emit('srv-srv_crt_room');
   }); 
 }
 
@@ -25,6 +26,11 @@ const joinRoom = (socket) => {
       socket.join(roomId);
       //TODO Check here if there are two players already. If so, reject 
       //The connection.
+      //If P1 null, join P1 spot.
+      //IF P2 null, join P2 spot.
+      //IF both P's taken, join spectator or reject connection? 
+      //maybe optional spectator?
+
       socket.emit('srv-user_join_room', roomId);
     }); 
 }

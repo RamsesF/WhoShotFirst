@@ -1,10 +1,8 @@
-duel.html
 <script src="/socket.io/socket.io.js"></script>
 </script>
 <script>
     let socket = io();
     socket.on('clt-user_connected', function (data) {
-        console.log(data);
-        socket.emit('clt-user_con_room');
+        //Join room
     });
 </script>

@@ -31,22 +31,29 @@
     document.getElementById("refreshButton").onclick = function() { refresh(); };
     document.getElementById("createRoomButton").onclick = function() { createRoom(); } ;
 
-    /* Client stuff */
-
     const refresh = () => {
         socket.emit('clt-user_lst_rooms');
     }
 
+    socket.on('srv-srv_crt_room', function () {
+        refresh();
+    });
+
     const createRoom = () => {
         socket.emit('clt-user_crt_room');
-        //TODO go to the room itself.
+        //TODO move client to the lobby.
     }
 
     const updateTable = (data) => {
         const table = document.getElementById("rooms");
+        if(data.length == 0) {
+            table.innerHTML = "";
+            table.innerHTML += "No lobbies found.";
+        } else {
         table.innerHTML = "";
         for (i = 0; i < (data.length); i++) { 
-            table.innerHTML += "<tr><td>" + data[i].id + "</td><td><button>join" + data[i].joinUrl + "</button></td></tr>";
-        }
+            table.innerHTML += "<tr><td>" + data[i].id + "</td><td><button>" + data[i].joinUrl + "</button></td></tr>";
+            }
+        }   
     }
 </script>
