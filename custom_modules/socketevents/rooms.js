@@ -1,26 +1,32 @@
 const uuidv1 = require('uuid/v1');
-const gameRooms = {};
+const gameRooms = [];
 
 const createRoom = (socket) => {
-  //TODO Create room right here
   socket.on('clt-user_crt_room', function() {
     roomId = uuidv1();
-    console.log("A user created a room: " + roomId);
+    console.log('*** CLIENT IS CREATING A ROOM, ROOMID:' + roomId + ' ***');
     socket.join(roomId);
-    gameRooms['roomId' + roomId] = roomId;
-    //TODO Check here if there are two players already. If so, reject 
-    //The connection.
+
+    const room = {};
+    room.id = roomId;
+    room.player1 = "";
+    room.player2 = "";
+    room.amountOfSpectators = "";
+    room.joinUrl = "localhost:8080/duel.html" + "?roomId="+roomId;
+
+    gameRooms.push(room);
     socket.emit('srv-user_join_room', roomId);
   }); 
 }
 
 const joinRoom = (socket) => {
     socket.on('clt-user_con_room', function(roomId) {
-        socket.join(roomId);
-        //TODO Check here if there are two players already. If so, reject 
-        //The connection.
-        socket.emit('srv-user_join_room', roomId);
-      }); 
+      console.log('*** CLIENT IS JOINING A ROOM, ROOMID:' + roomId + ' ***');
+      socket.join(roomId);
+      //TODO Check here if there are two players already. If so, reject 
+      //The connection.
+      socket.emit('srv-user_join_room', roomId);
+    }); 
 }
 
 const deleteRoom = (socket) => {
@@ -34,6 +40,12 @@ const listRoom = (io, socket) => {
     console.log('*** CLIENT IS GETTING ROOM LIST ***');
     socket.emit('srv-srv_lst_rooms', gameRooms);
   }); 
+}
+
+const whipeEmptyRooms = () => {
+  //TODO delete all the rooms with no players. 
+  //TODO call this at creating rooms
+  //TODO call this at deleting rooms
 }
 
 exports.createRoom = createRoom;

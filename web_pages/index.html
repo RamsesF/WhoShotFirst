@@ -1,27 +1,52 @@
 <html>
 <head>
 <title>Lobby</title>
+<style>
+        table, td {
+          border: 1px solid black;
+        }
+        </style>
 </head>
 
 <body>
-    <button type="button" onclick="refresh()">Refresh rooms</button>
+    <button id="refreshButton" type="button">Refresh rooms</button>
+    <button id="createRoomButton" type="button">Create room</button>
 </body>
+<br>
+<table id="rooms">
+</table>
 
 </html>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     let socket = io();
     socket.on('clt-user_connected', function () {
-        socket.emit('clt-user_crt_room');
         socket.emit('clt-user_lst_rooms');
     });
 
     socket.on('srv-srv_lst_rooms', function (data) {
-        console.log(data);
-        //TODO : refresh the lobby with all the rooms
+        updateTable(data);
     });
+
+    document.getElementById("refreshButton").onclick = function() { refresh(); };
+    document.getElementById("createRoomButton").onclick = function() { createRoom(); } ;
+
+    /* Client stuff */
 
     const refresh = () => {
         socket.emit('clt-user_lst_rooms');
+    }
+
+    const createRoom = () => {
+        socket.emit('clt-user_crt_room');
+        //TODO go to the room itself.
+    }
+
+    const updateTable = (data) => {
+        const table = document.getElementById("rooms");
+        table.innerHTML = "";
+        for (i = 0; i < (data.length); i++) { 
+            table.innerHTML += "<tr><td>" + data[i].id + "</td><td><button>join" + data[i].joinUrl + "</button></td></tr>";
+        }
     }
 </script>
