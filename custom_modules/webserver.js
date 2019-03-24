@@ -12,6 +12,12 @@ const startWebServer = () => {
         res.sendFile(path.join(__dirname + '/index.html'));
     });
 
+    app.get('/duel.html', function(req, res) {
+        //to validate if this works
+        //let roomId = req.query.n;
+        res.sendFile(path.join(__dirname + '/duel.html'));
+    });
+
     server.listen(8080);
 }
 
