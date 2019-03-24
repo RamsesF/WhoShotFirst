@@ -1,4 +1,5 @@
 const uuidv1 = require('uuid/v1');
+const gameRooms = {};
 
 const createRoom = (socket) => {
   //TODO Create room right here
@@ -6,6 +7,7 @@ const createRoom = (socket) => {
     roomId = uuidv1();
     console.log("A user created a room: " + roomId);
     socket.join(roomId);
+    gameRooms['roomId' + roomId] = roomId;
     //TODO Check here if there are two players already. If so, reject 
     //The connection.
     socket.emit('srv-user_join_room', roomId);
@@ -14,8 +16,6 @@ const createRoom = (socket) => {
 
 const joinRoom = (socket) => {
     socket.on('clt-user_con_room', function(roomId) {
-        roomId = uuidv1();
-        console.log("A user connected in room: " + roomId);
         socket.join(roomId);
         //TODO Check here if there are two players already. If so, reject 
         //The connection.
@@ -28,10 +28,11 @@ const deleteRoom = (socket) => {
 }
 
 const listRoom = (io, socket) => {
-  //TODO Return all the rooms for the lobby
+  //TODO: Construct a well thought lobby object for the client
+  //TODO: Optimalize the lobby object
   socket.on('clt-user_lst_rooms', function() {
-    console.log('*** LISTING THE ROOMS ***');
-    console.log(io.sockets.adapter.rooms);
+    console.log('*** CLIENT IS GETTING ROOM LIST ***');
+    socket.emit('srv-srv_lst_rooms', gameRooms);
   }); 
 }
 

@@ -1,11 +1,27 @@
+<html>
+<head>
+<title>Lobby</title>
+</head>
+
+<body>
+    <button type="button" onclick="refresh()">Refresh rooms</button>
+</body>
+
+</html>
 <script src="/socket.io/socket.io.js"></script>
-</script>
 <script>
+    let socket = io();
+    socket.on('clt-user_connected', function () {
+        socket.emit('clt-user_crt_room');
+        socket.emit('clt-user_lst_rooms');
+    });
 
-var socket = io();
-socket.on('clt-user_connected', function (data) {
-    console.log(data);
-    socket.emit('clt-user_con_room');
-});
+    socket.on('srv-srv_lst_rooms', function (data) {
+        console.log(data);
+        //TODO : refresh the lobby with all the rooms
+    });
 
+    const refresh = () => {
+        socket.emit('clt-user_lst_rooms');
+    }
 </script>
